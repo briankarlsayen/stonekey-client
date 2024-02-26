@@ -1,20 +1,21 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function Register() {
+function ForgotPassword() {
   return (
     <Box height="100vh">
       <Grid container height="100%">
-        <Grid sm={0} md={6} lg={8} bgcolor="blue"></Grid>
+        <Grid sm={0} md={6} lg={8} bgcolor="green"></Grid>
         <Grid sm={12} md={6} lg={4} p={2} width="100%">
           <Box
             display="flex"
             alignItems="center"
             justifyItems="center"
             height="100%"
+            width="100%"
           >
-            <RegisterForm />
+            <ForgotPasswordForm />
           </Box>
         </Grid>
       </Grid>
@@ -22,7 +23,7 @@ function Register() {
   );
 }
 
-const RegisterForm = () => {
+const ForgotPasswordForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("submit");
@@ -42,34 +43,13 @@ const RegisterForm = () => {
     });
   };
   return (
-    <Box>
+    <Box width="100%">
       <Paper elevation={3} style={{ padding: "20px" }}>
         <Typography variant="h5" gutterBottom pb={2}>
-          Registration
+          Forgot Password
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="FirstName"
-                variant="outlined"
-                name="firstName"
-                fullWidth
-                value={input?.firstName}
-                onChange={updateField}
-                // Add your other TextField props as needed
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                name="lastName"
-                label="LastName"
-                variant="outlined"
-                fullWidth
-                value={input?.lastName}
-                onChange={updateField}
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 name="email"
@@ -77,26 +57,6 @@ const RegisterForm = () => {
                 variant="outlined"
                 fullWidth
                 value={input?.email}
-                onChange={updateField}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                value={input?.password}
-                onChange={updateField}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="confirmPassword"
-                label="Confirm Password"
-                variant="outlined"
-                fullWidth
-                value={input?.confirmPassword}
                 onChange={updateField}
               />
             </Grid>
@@ -127,4 +87,4 @@ const RegisterForm = () => {
   );
 };
 
-export default Register;
+export default ForgotPassword;
