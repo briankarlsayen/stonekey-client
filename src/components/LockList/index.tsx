@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import LockCard from "../LockCard";
 import { Add } from "@mui/icons-material";
-function LockList({ locks }) {
+function LockList({ locks, handleOpen }) {
   return (
     <Paper elevation={3}>
       <Box p={4}>
@@ -17,9 +17,9 @@ function LockList({ locks }) {
         </Box>
 
         <Grid container spacing={2}>
-          {locks.map((lock) => (
-            <Grid item xs={12} sm={6} md={3}>
-              <LockCard {...lock} />
+          {locks.map((lock, index) => (
+            <Grid key={index} item xs={12} sm={6} md={3}>
+              <LockCard {...lock} handleOpen={handleOpen} />
             </Grid>
           ))}
         </Grid>

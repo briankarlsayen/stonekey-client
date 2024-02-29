@@ -25,6 +25,42 @@ const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Inter, sans-serif",

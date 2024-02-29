@@ -1,5 +1,14 @@
 import { Avatar, Box, Typography } from "@mui/material";
 
+const boxSx = {
+  cursor: "pointer",
+  "&:hover": {
+    border: "2px solid #372e29",
+    color: "white",
+    backgroundColor: "#726255",
+  },
+};
+
 function LockCard(props) {
   return (
     <Box
@@ -10,6 +19,8 @@ function LockCard(props) {
       alignItems="center"
       border="2px solid #f0c75e"
       borderRadius="5px"
+      sx={boxSx}
+      onClick={props.handleOpen}
     >
       <Avatar
         variant="square"
