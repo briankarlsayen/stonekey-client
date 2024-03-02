@@ -1,4 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { handleSelectCard } from "../../reducers/lockReducer";
 
 const boxSx = {
   cursor: "pointer",
@@ -10,6 +13,10 @@ const boxSx = {
 };
 
 function LockCard(props) {
+  const dispatch = useDispatch();
+  const handleSelect = () => {
+    dispatch(handleSelectCard(props));
+  };
   return (
     <Box
       p={2}
@@ -20,7 +27,7 @@ function LockCard(props) {
       border="2px solid #f0c75e"
       borderRadius="5px"
       sx={boxSx}
-      onClick={props.handleOpen}
+      onClick={handleSelect}
     >
       <Avatar
         variant="square"

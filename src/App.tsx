@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Layout from "./layout";
 import LockManager from "./pages/LockManager";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,7 +39,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </ThemeProvider>
   );
 }

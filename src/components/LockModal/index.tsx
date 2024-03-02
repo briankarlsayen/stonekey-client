@@ -4,24 +4,59 @@ import {
   Button,
   Grid,
   IconButton,
-  InputAdornment,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import {
-  Casino,
-  Close,
-  ShuffleOn,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+import { useState } from "react";
+import { Casino, Close } from "@mui/icons-material";
 import BasicSelect from "../BasicSelect";
 import { categoryList, loginTypeList } from "./data";
 import PasswordInput from "../PasswordInput";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { handleModal } from "../../reducers/lockReducer";
 
-function LockModal({ open, handleClose }) {
+function LockModal() {
+  const { isOpen: open, modalType } = useSelector(
+    (state: RootState) => state.lock
+  );
+  const dispatch = useDispatch();
+  const handleClose = () => {
+    dispatch(handleModal({ isOpen: false }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (modalType === "add") {
+      handleAddLock();
+    } else if (modalType === "edit") {
+      handleEditLock();
+    } else {
+      dispatch(handleModal({ isOpen: true, modalType: "edit" }));
+    }
+  };
+
+  const handleAddLock = () => {
+    console.log("lock added");
+  };
+
+  const handleEditLock = () => {
+    console.log("lock edit");
+  };
+
+  const handleCancel = () => {
+    dispatch(handleModal({ isOpen: true, modalType: "view" }));
+  };
+
+  const modalTitle =
+    modalType === "add"
+      ? "Add Lock"
+      : modalType === "edit"
+      ? "Edit Lock"
+      : "View Lock";
+
   return (
     <Modal
       open={open}
@@ -42,23 +77,28 @@ function LockModal({ open, handleClose }) {
           borderRadius: "5px",
         }}
       >
-        <Box pb={2} display="flex" justifyContent="space-between">
-          <Typography variant="h5">Add Lock</Typography>
+        <Box
+          pb={2}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Typography variant="h5">{modalTitle}</Typography>
           <IconButton onClick={handleClose}>
             <Close />
           </IconButton>
         </Box>
-        <LockModalForm />
+        <LockModalForm
+          modalType={modalType}
+          handleSubmit={handleSubmit}
+          handleCancel={handleCancel}
+        />
       </Box>
     </Modal>
   );
 }
 
-const LockModalForm = () => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("submit");
-  };
+const LockModalForm = ({ modalType, handleSubmit, handleCancel }) => {
   const [input, setInput] = useState({
     logo: "",
     title: "",
@@ -77,6 +117,39 @@ const LockModalForm = () => {
     });
   };
 
+  const ActionButton = () => {
+    switch (modalType) {
+      case "view":
+        return (
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Edit
+          </Button>
+        );
+      case "add":
+        return (
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Submit
+          </Button>
+        );
+      case "edit":
+        return (
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Submit
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          </Box>
+        );
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
@@ -88,6 +161,7 @@ const LockModalForm = () => {
             fullWidth
             value={input?.logo}
             onChange={updateField}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -98,6 +172,7 @@ const LockModalForm = () => {
             fullWidth
             value={input?.title}
             onChange={updateField}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -109,6 +184,7 @@ const LockModalForm = () => {
             fullWidth
             value={input.loginType}
             onChange={updateField}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -116,6 +192,7 @@ const LockModalForm = () => {
             loginType={input.loginType}
             input={input}
             updateField={updateField}
+            modalType={modalType}
           />
         </Grid>
 
@@ -127,6 +204,7 @@ const LockModalForm = () => {
             renderInput={(params) => (
               <TextField {...params} variant="outlined" label="Category" />
             )}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -137,6 +215,7 @@ const LockModalForm = () => {
             fullWidth
             value={input?.website}
             onChange={updateField}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -149,19 +228,21 @@ const LockModalForm = () => {
             onChange={updateField}
             multiline
             rows={4}
+            disabled={modalType === "view"}
           />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <ActionButton />
+          {/* <Button type="submit" variant="contained" color="primary" fullWidth>
             Create
-          </Button>
+          </Button> */}
         </Grid>
       </Grid>
     </form>
   );
 };
 
-const LockLoginInfo = ({ loginType, input, updateField }) => {
+const LockLoginInfo = ({ loginType, input, updateField, modalType }) => {
   let details;
   const handleGeneratePassword = () => {
     console.log("generate password");
@@ -179,6 +260,7 @@ const LockLoginInfo = ({ loginType, input, updateField }) => {
               fullWidth
               value={input?.username}
               onChange={updateField}
+              disabled={modalType === "view"}
             />
           </Grid>
           <Grid item xs={12} md={12}>
@@ -190,9 +272,13 @@ const LockLoginInfo = ({ loginType, input, updateField }) => {
                 fullWidth
                 value={input?.password}
                 onChange={updateField}
+                disabled={modalType === "view"}
               />
 
-              <Button onClick={handleGeneratePassword}>
+              <Button
+                onClick={handleGeneratePassword}
+                disabled={modalType === "view"}
+              >
                 <Casino />
               </Button>
             </Box>
@@ -237,7 +323,10 @@ const LockLoginInfo = ({ loginType, input, updateField }) => {
                 value={input?.password}
                 onChange={updateField}
               />
-              <Button onClick={handleGeneratePassword}>
+              <Button
+                onClick={handleGeneratePassword}
+                disabled={modalType === "view"}
+              >
                 <Casino />
               </Button>
             </Box>

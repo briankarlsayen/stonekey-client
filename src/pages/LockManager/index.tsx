@@ -2,9 +2,9 @@ import { Box, Pagination } from "@mui/material";
 import { useState } from "react";
 import LockList from "../../components/LockList";
 import LockModal from "../../components/LockModal";
+import FilterModal from "../../components/FilterModal";
 
 function LockManager() {
-  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 16;
 
@@ -234,18 +234,10 @@ function LockManager() {
   ];
   const currentCards = cardsData.slice(indexOfFirstCard, indexOfLastCard);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Box height="100%">
       <Box py={2}>
-        <LockList locks={currentCards} handleOpen={handleOpen} />
+        <LockList locks={currentCards} />
       </Box>
       <Pagination
         color="primary"
@@ -254,7 +246,9 @@ function LockManager() {
         onChange={handlePageChange}
         sx={{ float: "right" }}
       />
-      <LockModal open={open} handleClose={handleClose} />
+      {/* modals */}
+      <LockModal />
+      <FilterModal />
     </Box>
   );
 }
