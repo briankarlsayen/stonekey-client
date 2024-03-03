@@ -1,9 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import lockReducer from "./reducers/lockReducer";
+import categoryReducer from "./reducers/categoryReducer";
+import globalReducer from "./reducers/globalReducer";
 
 const rootReducer = combineReducers({
   lock: lockReducer,
-  // Add other reducers here
+  category: categoryReducer,
+  global: globalReducer,
 });
 
 export const store = configureStore({

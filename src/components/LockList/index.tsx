@@ -21,41 +21,47 @@ function LockList({ locks }) {
   };
 
   const handleFilter = () => {
+    // navigate("/lock-manager/category");
     dispatch(handleFilterModal({ isOpen: true }));
+  };
+
+  const LockListHeader = () => {
+    return (
+      <Box pb={2} display="flex" justifyContent="space-between" gap={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <TextField fullWidth placeholder="Search" size="small" />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography fontWeight={500}>Saved Password(134)</Typography>
+              <Box>
+                <IconButton onClick={handleFilter}>
+                  <Tune />
+                </IconButton>
+                <Button variant="contained" onClick={handleAddButton}>
+                  <Add />
+                  Add
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+        <Box display="flex" gap={2}></Box>
+      </Box>
+    );
   };
 
   return (
     <Paper elevation={3}>
       <Box p={4}>
-        <Box pb={2} display="flex" justifyContent="space-between" gap={2}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
-              <TextField fullWidth placeholder="Search" size="small" />
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Box
-                display="flex"
-                gap={1}
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography>Saved Password(134)</Typography>
-                <Box>
-                  <IconButton onClick={handleFilter}>
-                    <Tune />
-                  </IconButton>
-                  <Button variant="contained" onClick={handleAddButton}>
-                    <Add />
-                    Add
-                  </Button>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-          <Box display="flex" gap={2}></Box>
-        </Box>
-
+        <LockListHeader />
         <Grid container spacing={2}>
           {locks.map((lock, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={3}>

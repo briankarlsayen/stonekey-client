@@ -1,4 +1,4 @@
-import { Close } from "@mui/icons-material";
+import { Close, EditNoteSharp } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -16,10 +16,11 @@ import { handleFilterModal } from "../../reducers/lockReducer";
 import { categoryList } from "../LockModal/data";
 import BasicSelect from "../BasicSelect";
 import { sortTypeList } from "./data";
+import { useNavigate } from "react-router-dom";
 
 function FilterModal() {
   const lockState = useSelector((state: RootState) => state.lock);
-
+  const navigate = useNavigate();
   const open = lockState?.filterModal?.isOpen;
 
   const dispatch = useDispatch();
@@ -49,6 +50,12 @@ function FilterModal() {
       ...input,
       categories: newVal,
     });
+  };
+
+  const openCategoryModal = () => {
+    // dispatch(handleCategoryModal({ isOpen: true }));
+    dispatch(handleFilterModal({ isOpen: false }));
+    navigate("/lock-manager/category");
   };
 
   return (
@@ -87,6 +94,7 @@ function FilterModal() {
           input={input}
           updateField={updateField}
           handleCategoriesChange={handleCategoriesChange}
+          openCategoryModal={openCategoryModal}
         />
       </Box>
     </Modal>
@@ -98,6 +106,7 @@ const FilterModalForm = ({
   input,
   updateField,
   handleCategoriesChange,
+  openCategoryModal,
 }) => {
   return (
     <form onSubmit={handleSubmit}>
@@ -114,20 +123,28 @@ const FilterModalForm = ({
           />
         </Grid>
         <Grid item xs={12}>
-          <Autocomplete
-            multiple
-            options={categoryList}
-            getOptionLabel={(option) => option.text}
-            onChange={handleCategoriesChange}
-            value={input.categories}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Select Categories"
-              />
-            )}
-          />
+          <Box display="flex" gap={2} alignItems="center">
+            <Autocomplete
+              fullWidth
+              multiple
+              options={categoryList}
+              getOptionLabel={(option) => option.text}
+              onChange={handleCategoriesChange}
+              value={input.categories}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Select Categories"
+                />
+              )}
+            />
+            <Box>
+              <IconButton onClick={openCategoryModal}>
+                <EditNoteSharp />
+              </IconButton>
+            </Box>
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary" fullWidth>

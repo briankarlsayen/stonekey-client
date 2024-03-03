@@ -3,6 +3,7 @@ import { useState } from "react";
 import LockList from "../../components/LockList";
 import LockModal from "../../components/LockModal";
 import FilterModal from "../../components/FilterModal";
+import CategoryModal from "../../components/CategoryModal";
 
 function LockManager() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -249,6 +250,7 @@ function LockManager() {
       {/* modals */}
       <LockModal />
       <FilterModal />
+      <CategoryModal />
     </Box>
   );
 }

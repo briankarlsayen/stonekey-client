@@ -61,6 +61,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Inter, sans-serif",

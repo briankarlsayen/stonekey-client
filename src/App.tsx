@@ -10,6 +10,8 @@ import Layout from "./layout";
 import LockManager from "./pages/LockManager";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import Category from "./pages/Category";
+import NoMatch from "./pages/NoMatch";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +22,10 @@ function App() {
         {
           path: "lock-manager",
           element: <LockManager />,
+        },
+        {
+          path: "lock-manager/category",
+          element: <Category />,
         },
       ],
     },
@@ -34,6 +40,10 @@ function App() {
     {
       path: "/forgot-password",
       element: <ForgotPassword />,
+    },
+    {
+      path: "*",
+      element: <NoMatch />,
     },
   ]);
   return (

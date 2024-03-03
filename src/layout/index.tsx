@@ -1,20 +1,23 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Key, Logout, Settings, Download } from "@mui/icons-material/";
 import "./index.css";
 
-type SelectedItems = "locks" | "notes";
+type SelectedItems = "lock-manager" | "notes";
 
 function Layout() {
+  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-  const [selectedItem, setSelectedItem] = useState<SelectedItems>("locks");
+  const [selectedItem, setSelectedItem] =
+    useState<SelectedItems>("lock-manager");
 
   const handleItemClick = (itemName: SelectedItems) => {
     setSelectedItem(itemName);
+    navigate(itemName);
   };
 
   return (
@@ -67,9 +70,9 @@ const Navbar = ({
           <Box display="flex" flexDirection="row" gap={2} pl={4}>
             <Typography
               className={`navbar-item ${
-                selectedItem === "locks" ? "selected" : ""
+                selectedItem === "lock-manager" ? "selected" : ""
               }`}
-              onClick={() => handleItemClick("locks")}
+              onClick={() => handleItemClick("lock-manager")}
               sx={{ cursor: "pointer" }}
             >
               Lock Manager
