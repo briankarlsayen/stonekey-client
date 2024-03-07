@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Register from "./pages/Register";
 import { ThemeProvider } from "@emotion/react";
@@ -12,6 +11,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import Category from "./pages/Category";
 import NoMatch from "./pages/NoMatch";
+import Settings from "./pages/Settings";
 
 function App() {
   const router = createBrowserRouter([
@@ -27,6 +27,10 @@ function App() {
           path: "lock-manager/category",
           element: <Category />,
         },
+        {
+          path: "settings",
+          element: <Settings />,
+        },
       ],
     },
     {
@@ -41,6 +45,7 @@ function App() {
       path: "/forgot-password",
       element: <ForgotPassword />,
     },
+
     {
       path: "*",
       element: <NoMatch />,

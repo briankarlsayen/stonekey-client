@@ -28,6 +28,7 @@ function Layout() {
           toggleSidebar={toggleSidebar}
           handleItemClick={handleItemClick}
           selectedItem={selectedItem}
+          navigate={navigate}
         />
         <Box display="flex" width="100%" justifyContent="center">
           <Box maxWidth="lg" width="100%" p={2}>
@@ -44,6 +45,7 @@ const Navbar = ({
   toggleSidebar,
   handleItemClick,
   selectedItem,
+  navigate,
 }) => {
   return (
     <Box
@@ -92,7 +94,7 @@ const Navbar = ({
           <IconButton color="secondary">
             <Download sx={{ cursor: "pointer" }} />
           </IconButton>
-          <IconButton color="secondary">
+          <IconButton color="secondary" onClick={() => navigate("settings")}>
             <Settings sx={{ cursor: "pointer" }} />
           </IconButton>
           <IconButton color="secondary">
