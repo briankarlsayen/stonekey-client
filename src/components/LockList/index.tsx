@@ -61,7 +61,7 @@ function LockList({ locks }) {
   return (
     <Paper elevation={3}>
       <Box p={4}>
-        <LockListHeader />
+        {/* <LockListHeader /> */}
         <Grid container spacing={2}>
           {locks.map((lock, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={3}>

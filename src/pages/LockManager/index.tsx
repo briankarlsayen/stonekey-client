@@ -1,9 +1,11 @@
-import { Box, Pagination } from "@mui/material";
+import { Box, Pagination, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import LockList from "../../components/LockList";
 import LockModal from "../../components/LockModal";
 import FilterModal from "../../components/FilterModal";
 import CategoryModal from "../../components/CategoryModal";
+import { cardsData } from "./data";
+import theme from "../../theme";
 
 function LockManager() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,225 +17,10 @@ function LockManager() {
   const handlePageChange = (_event, value) => {
     setCurrentPage(value);
   };
-  const cardsData = [
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 1,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 2,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 3,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 4,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 5,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-    {
-      id: 6,
-      title: "google",
-      username: "blu3fire89@gmail.com",
-      password: "123",
-    },
-  ];
+
   const currentCards = cardsData.slice(indexOfFirstCard, indexOfLastCard);
+  // const mobileSize = false;
+  const mobileSize = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
     <Box height="100%">
@@ -245,7 +32,11 @@ function LockManager() {
         count={Math.ceil(cardsData.length / cardsPerPage)}
         page={currentPage}
         onChange={handlePageChange}
-        sx={{ float: "right" }}
+        sx={{
+          float: "right",
+          // paddingBottom: "5rem",
+          paddingBottom: mobileSize ? "6rem" : 0,
+        }}
       />
       {/* modals */}
       <LockModal />

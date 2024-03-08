@@ -1,9 +1,20 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputLabel,
+  Paper,
+  Select,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import General from "./General";
 import EditPassword from "./EditPassword";
 import DeleteAccount from "./DeleteAccount";
+import theme from "../../theme";
+import BasicSelect from "../../components/BasicSelect";
 function Settings() {
   const navigate = useNavigate();
   const handleCancel = () => {
@@ -70,6 +81,8 @@ const SettingsForm = ({
     }
   };
 
+  const desktopSize = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <Box width="100%">
       <Paper elevation={3} style={{ padding: "20px" }}>
@@ -78,20 +91,42 @@ const SettingsForm = ({
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              {sidebarList.map((item, index) => (
-                <Typography
-                  key={index}
-                  fontWeight={selected === item.value ? 600 : 400}
-                  onClick={() => handleSidebarClick(item.value)}
-                  sx={{ cursor: "pointer" }}
-                >
-                  {item.text}
-                </Typography>
-              ))}
-            </Box>
+            {desktopSize ? (
+              <Box display="flex" flexDirection="column" gap={2}>
+                {sidebarList.map((item, index) => (
+                  <Typography
+                    key={index}
+                    fontWeight={selected === item.value ? 600 : 400}
+                    onClick={() => handleSidebarClick(item.value)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {item.text}
+                  </Typography>
+                ))}
+              </Box>
+            ) : (
+              <Box pb={2}>
+                <BasicSelect
+                  list={sidebarList}
+                  variant="outlined"
+                  value={selected}
+                  fullWidth={false}
+                  sx={{ maxWidth: 300 }}
+                  onChange={(e) => handleSidebarClick(e.target.value)}
+                />
+              </Box>
+            )}
           </Grid>
-          <Grid item xs={12} md={8} borderLeft="1px solid lightGray">
+          <Grid
+            item
+            xs={12}
+            md={8}
+            sx={{
+              borderLeft: {
+                md: "1px solid lightGray",
+              },
+            }}
+          >
             {/* <Typography>{contentTitle}</Typography> */}
             {content()}
           </Grid>
