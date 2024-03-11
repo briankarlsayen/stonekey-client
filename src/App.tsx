@@ -12,6 +12,9 @@ import { store } from "./store";
 import Category from "./pages/Category";
 import NoMatch from "./pages/NoMatch";
 import Settings from "./pages/Settings";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,6 +59,7 @@ function App() {
       <CssBaseline />
       <Provider store={store}>
         <RouterProvider router={router} />
+        <ToastContainer />
       </Provider>
     </ThemeProvider>
   );

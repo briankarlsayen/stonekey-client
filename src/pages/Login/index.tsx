@@ -1,13 +1,13 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Login() {
   return (
     <Box height="100vh">
       <Grid container height="100%">
-        <Grid sm={0} md={6} lg={8} bgcolor="red"></Grid>
-        <Grid sm={12} md={6} lg={4} p={2} width="100%">
+        <Grid item sm={0} md={6} lg={8} bgcolor="red"></Grid>
+        <Grid item sm={12} md={6} lg={4} p={2} width="100%">
           <Box
             display="flex"
             alignItems="center"

@@ -125,8 +125,9 @@ const DesktopView = ({
               Stonekey
             </Typography>
             <Box display="flex" flexDirection="row" gap={2} pl={4}>
-              {navbarItems.map((item) => (
+              {navbarItems.map((item, index) => (
                 <Typography
+                  key={index}
                   className={`navbar-item ${
                     selectedItem === item.value ? "selected" : ""
                   }`}
