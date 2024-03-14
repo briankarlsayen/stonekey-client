@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface CategoryState {
-  categories: Category[];
+  list: Category[];
   selected?: {
     id?: string;
   };
@@ -12,12 +12,11 @@ export interface CategoryState {
 }
 
 export interface Category {
-  name: string;
-  value: string;
+  title: string;
 }
 
 const initialState: CategoryState = {
-  categories: [],
+  list: [],
   selected: null,
   categoryModal: {
     isOpen: false,
@@ -34,8 +33,11 @@ const categoryReducer = createSlice({
       state.categoryModal.isOpen = isOpen;
       state.categoryModal.modalType = modalType;
     },
+    setCategories: (state, action) => {
+      state.list = action.payload;
+    },
   },
 });
 
-export const { handleCategoryModal } = categoryReducer.actions;
+export const { handleCategoryModal, setCategories } = categoryReducer.actions;
 export default categoryReducer.reducer;

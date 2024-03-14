@@ -40,7 +40,9 @@ function LockList({ locks }) {
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography fontWeight={500}>Saved Password(134)</Typography>
+              <Typography fontWeight={500}>
+                Saved Password({locks.length})
+              </Typography>
               <Box>
                 <IconButton onClick={handleFilter}>
                   <Tune />
@@ -61,7 +63,7 @@ function LockList({ locks }) {
   return (
     <Paper elevation={3}>
       <Box p={4}>
-        {/* <LockListHeader /> */}
+        <LockListHeader />
         <Grid container spacing={2}>
           {locks.map((lock, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={3}>

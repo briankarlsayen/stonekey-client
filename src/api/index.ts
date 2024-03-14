@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { instance } from "./axios";
 import { ToastOptions, toast } from "react-toastify";
+import { getAuthDetails } from "./db/dexieApi";
 
 interface PostApiResponse extends AxiosResponse {
   message?: string;
@@ -8,12 +9,20 @@ interface PostApiResponse extends AxiosResponse {
   // data: any;
 }
 
+const getHeader = async () => {
+  const data = await getAuthDetails();
+  return data?.accessToken ?? "";
+};
+
 export const routePostApi = async (
   apiRoute,
   params
 ): Promise<PostApiResponse> => {
   try {
-    const response = await instance.post(apiRoute, params);
+    const headers = { Authorization: await getHeader() };
+    const response = await instance.post(apiRoute, params, {
+      headers,
+    });
     console.log("responsesad", response);
     if (response.data.message) {
       toastContainer(response.status, "Success");
@@ -33,7 +42,9 @@ export const routePostApi = async (
 
 export const routeGetApi = async (apiRoute) => {
   try {
-    const response = await instance.get(apiRoute);
+    const headers = { Authorization: await getHeader() };
+
+    const response = await instance.get(apiRoute, { headers });
     return response;
   } catch (error) {
     if (error?.response?.status && error?.response?.data?.message) {

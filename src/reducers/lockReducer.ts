@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface LockState {
+  list: any[];
   isOpen: boolean;
   selected?: {
     id?: string;
@@ -12,6 +13,7 @@ export interface LockState {
 }
 
 const initialState: LockState = {
+  list: [],
   isOpen: false,
   selected: null,
   modalType: "add",
@@ -38,9 +40,12 @@ const lockReducer = createSlice({
       const { isOpen } = action.payload;
       state.filterModal.isOpen = isOpen;
     },
+    setLocks: (state, action) => {
+      state.list = action.payload;
+    },
   },
 });
 
-export const { handleModal, handleSelectCard, handleFilterModal } =
+export const { handleModal, handleSelectCard, handleFilterModal, setLocks } =
   lockReducer.actions;
 export default lockReducer.reducer;
