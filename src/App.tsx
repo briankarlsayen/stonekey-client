@@ -15,6 +15,7 @@ import Settings from "./pages/Settings";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import BasicDialog from "./components/BasicDialog";
 
 function App() {
   const router = createBrowserRouter([

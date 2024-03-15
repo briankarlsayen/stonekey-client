@@ -16,7 +16,8 @@ import PasswordInput from "../PasswordInput";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { handleModal } from "../../reducers/lockReducer";
-import { createLockApi } from "../../api/api";
+import { createLockApi, editLockApi } from "../../api/api";
+import { setDialog } from "../../reducers/dialogReducer";
 
 const DEFAULT_LOGIN_TYPE_CODE = "UP";
 
@@ -25,6 +26,7 @@ function LockModal() {
     (state: RootState) => state.lock
   );
   const { list } = useSelector((state: RootState) => state.loginType);
+  const { selected } = useSelector((state: RootState) => state.lock);
 
   const loginTypeList = list.map((item) => {
     return {
@@ -59,14 +61,35 @@ function LockModal() {
   const handleAddLock = async () => {
     const addLockParams = {
       ...input,
-      categoryArr: input?.categoryArr?.map((item) => item._id),
+      categoryArr: input?.categoryDetails?.map((item) => item._id),
       loginTypeId: loginTypeObj?._id,
     };
-    const addLock = await createLockApi(addLockParams);
+    await createLockApi(addLockParams);
   };
 
-  const handleEditLock = () => {
-    console.log("lock edit");
+  const handleEditLock = async () => {
+    console.log("lock edit", selected);
+    const editLockParams = {
+      ...input,
+      categoryArr: input?.categoryDetails?.map((item) => item._id),
+      loginTypeId: loginTypeObj?._id,
+    };
+    await editLockApi(selected?._id, editLockParams);
+  };
+
+  const handleDeleteLock = async () => {
+    console.log("delete lock");
+  };
+
+  const openDeleLockDialog = () => {
+    dispatch(
+      setDialog({
+        open: true,
+        title: "Are you sure you want to delete lock",
+        content: "Press continue to delete lock permanently.",
+        // handleContinue: handleDeleteLock.toString(),
+      })
+    );
   };
 
   const handleCancel = () => {
@@ -80,7 +103,8 @@ function LockModal() {
       ? "Edit Lock"
       : "View Lock";
 
-  const [input, setInput] = useState({
+  const defaultLockInput = {
+    _id: "",
     logo: "",
     title: "",
     loginTypeCode: loginTypeList[0]?.value ?? DEFAULT_LOGIN_TYPE_CODE,
@@ -90,7 +114,10 @@ function LockModal() {
     website: "",
     description: "",
     categoryArr: [],
-  });
+    categoryDetails: [],
+  };
+
+  const [input, setInput] = useState(defaultLockInput);
 
   const [loginTypeObj, setLoginTypeObj] = useState({
     _id: "",
@@ -115,16 +142,58 @@ function LockModal() {
   const handleCategoriesChange = (e, newVal) => {
     setInput({
       ...input,
-      categoryArr: newVal,
+      categoryDetails: newVal,
     });
   };
 
-  // useEffect(() => {
-  //   const itemObj = loginTypeList.find(
-  //     (item) => item.value === DEFAULT_LOGIN_TYPE_CODE
-  //   );
-  //   if (itemObj) setLoginTypeObj(itemObj);
-  // }, [list]);
+  const setLockDetails = () => {
+    const {
+      _id,
+      title,
+      username,
+      password,
+      category,
+      website,
+      description,
+      categoryArr,
+      categoryDetails,
+      loginTypeDetails,
+    } = selected;
+    setInput({
+      ...input,
+      _id,
+      title,
+      username,
+      password,
+      category,
+      website,
+      description,
+      categoryArr,
+      categoryDetails,
+      loginTypeCode: loginTypeDetails?.code,
+    });
+    const itemObj = getLoginType(loginTypeDetails?.code);
+    if (itemObj) setLoginTypeObj(itemObj);
+  };
+
+  const getLoginType = (code: string) => {
+    return loginTypeList.find((item) => item.value === code);
+  };
+
+  useEffect(() => {
+    // get initial login type obj
+
+    // initial
+    // view | edit
+    const itemObj = getLoginType(DEFAULT_LOGIN_TYPE_CODE);
+
+    if (itemObj) setLoginTypeObj(itemObj);
+  }, [list]);
+
+  useEffect(() => {
+    if (modalType === "view" && selected) setLockDetails();
+    else if (modalType === "add") setInput(defaultLockInput); // clear input
+  }, [modalType]);
 
   return (
     <Modal
@@ -167,6 +236,7 @@ function LockModal() {
           categoryList={categoryList}
           loginTypeList={loginTypeList}
           loginTypeObj={loginTypeObj}
+          openDeleLockDialog={openDeleLockDialog}
         />
       </Box>
     </Modal>
@@ -183,14 +253,25 @@ const LockModalForm = ({
   categoryList,
   loginTypeList,
   loginTypeObj,
+  openDeleLockDialog,
 }) => {
   const ActionButton = () => {
     switch (modalType) {
       case "view":
         return (
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Edit
-          </Button>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              fullWidth
+              onClick={openDeleLockDialog}
+            >
+              Delete
+            </Button>
+          </Box>
         );
       case "add":
         return (
@@ -220,7 +301,7 @@ const LockModalForm = ({
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextField
             name="logo"
             label="Logo"
@@ -230,7 +311,7 @@ const LockModalForm = ({
             onChange={updateField}
             disabled={modalType === "view"}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <TextField
             name="title"
@@ -273,8 +354,11 @@ const LockModalForm = ({
               <TextField {...params} variant="outlined" label="Category" />
             )}
             disabled={modalType === "view"}
-            value={input.catergoryArr}
+            value={input.categoryDetails}
             onChange={handleCategoriesChange}
+            isOptionEqualToValue={(option, value) =>
+              option.title === value.title
+            }
           />
         </Grid>
         <Grid item xs={12}>
@@ -303,9 +387,6 @@ const LockModalForm = ({
         </Grid>
         <Grid item xs={12}>
           <ActionButton />
-          {/* <Button type="submit" variant="contained" color="primary" fullWidth>
-            Create
-          </Button> */}
         </Grid>
       </Grid>
     </form>
@@ -319,101 +400,12 @@ const LockLoginInfo = ({
   updateField,
   modalType,
 }) => {
-  let details;
   const handleGeneratePassword = () => {
     console.log("generate password");
   };
 
-  switch (loginTypeCode) {
-    case "username-password":
-      details = (
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12}>
-            <TextField
-              name="username"
-              label="Username"
-              variant="outlined"
-              fullWidth
-              value={input?.username}
-              onChange={updateField}
-              disabled={modalType === "view"}
-            />
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <Box display="flex" gap={2}>
-              <PasswordInput
-                name="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                value={input?.password}
-                onChange={updateField}
-                disabled={modalType === "view"}
-              />
-
-              <Button
-                onClick={handleGeneratePassword}
-                disabled={modalType === "view"}
-              >
-                <Casino />
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      );
-      break;
-    case "gmail":
-      details = (
-        <Box>
-          <TextField
-            name="username"
-            label="Email"
-            variant="outlined"
-            fullWidth
-            value={input?.username}
-            onChange={updateField}
-          />
-        </Box>
-      );
-      break;
-    case "email-password":
-      details = (
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12}>
-            <TextField
-              name="username"
-              label="Email"
-              variant="outlined"
-              fullWidth
-              value={input?.username}
-              onChange={updateField}
-            />
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <Box display="flex" gap={2}>
-              <PasswordInput
-                name="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                value={input?.password}
-                onChange={updateField}
-              />
-              <Button
-                onClick={handleGeneratePassword}
-                disabled={modalType === "view"}
-              >
-                <Casino />
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      );
-      break;
-  }
-
   // const userNameLabel = loginTypeCode.code === 'EP';
-  let userNameLabel;
+  let userNameLabel = "";
   switch (loginTypeCode) {
     case "EP":
       userNameLabel = "Email";
@@ -436,6 +428,7 @@ const LockLoginInfo = ({
           fullWidth
           value={input?.username}
           onChange={updateField}
+          disabled={modalType === "view"}
         />
       </Grid>
       {loginTypeObj.passwordRequired && (
@@ -448,6 +441,7 @@ const LockLoginInfo = ({
               fullWidth
               value={input?.password}
               onChange={updateField}
+              disabled={modalType === "view"}
             />
             <Button
               onClick={handleGeneratePassword}

@@ -23,7 +23,6 @@ export const routePostApi = async (
     const response = await instance.post(apiRoute, params, {
       headers,
     });
-    console.log("responsesad", response);
     if (response.data.message) {
       toastContainer(response.status, "Success");
       // toastContainer(response.status, response.data.message);
@@ -57,7 +56,9 @@ export const routeGetApi = async (apiRoute) => {
 
 export const routeUpdateApi = async (apiRoute, params) => {
   try {
-    const response = await instance.put(apiRoute, params);
+    const headers = { Authorization: await getHeader() };
+
+    const response = await instance.put(apiRoute, params, { headers });
     if (response.data.message) {
       toastContainer(response.status, response.data.message);
     }

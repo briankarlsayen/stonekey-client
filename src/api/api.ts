@@ -1,4 +1,4 @@
-import { routeGetApi, routePostApi } from ".";
+import { routeGetApi, routePostApi, routeUpdateApi } from ".";
 import { checkOnline } from "../utils/utils";
 
 interface GenericResponse {
@@ -13,6 +13,7 @@ export const loginApi = async (input): Promise<GenericResponse> => {
   }
 };
 
+// locks
 export const getLocksApi = async (): Promise<void> => {
   let locks;
   if (await checkOnline()) {
@@ -24,8 +25,14 @@ export const getLocksApi = async (): Promise<void> => {
 
 export const createLockApi = async (props): Promise<void> => {
   if (await checkOnline()) {
-    const response = await routePostApi("/createlock", props);
-    // return response
+    await routePostApi("/createlock", props);
+  }
+};
+
+export const editLockApi = async (id, props): Promise<void> => {
+  if (await checkOnline()) {
+    const editLock = await routeUpdateApi("/updatelock/" + id, props);
+    console.log("edit", editLock);
   }
 };
 

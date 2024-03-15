@@ -1,10 +1,42 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+type CategoryDetails = {
+  _id?: string;
+  createdAt?: Date;
+  isDeleted?: boolean;
+  title?: string;
+  updatedAt?: Date;
+  userId?: string;
+};
+
+type LoginTypeDetails = {
+  _id?: string;
+  code?: string;
+  isDeleted?: boolean;
+  title?: string;
+};
+
 export interface LockState {
   list: any[];
   isOpen: boolean;
   selected?: {
+    _id: string;
     id?: string;
+    category?: string;
+    categoryArr?: string[];
+    categoryDetails?: CategoryDetails[];
+    createdAt?: Date;
+    createdBy?: string;
+    description?: string;
+    favorite?: boolean;
+    loginTypeDetails?: LoginTypeDetails;
+    masterKeyId?: string;
+    password?: string;
+    secured?: boolean;
+    title?: string;
+    updatedAt?: Date;
+    username?: string;
+    website?: string;
   };
   modalType: "add" | "view" | "edit";
   filterModal: {
