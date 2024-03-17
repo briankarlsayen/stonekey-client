@@ -9,6 +9,11 @@ interface PostApiResponse extends AxiosResponse {
   // data: any;
 }
 
+interface PutApiProps {
+  apiRoute: string;
+  params?: any;
+}
+
 const getHeader = async () => {
   const data = await getAuthDetails();
   return data?.accessToken ?? "";
@@ -44,7 +49,7 @@ export const routeGetApi = async (apiRoute) => {
     const headers = { Authorization: await getHeader() };
 
     const response = await instance.get(apiRoute, { headers });
-    return response;
+    return { ...response, success: true };
   } catch (error) {
     if (error?.response?.status && error?.response?.data?.message) {
       toastContainer(error.response.status, error.response.data.message);
@@ -54,7 +59,7 @@ export const routeGetApi = async (apiRoute) => {
   }
 };
 
-export const routeUpdateApi = async (apiRoute, params) => {
+export const routeUpdateApi = async ({ apiRoute, params }: PutApiProps) => {
   try {
     const headers = { Authorization: await getHeader() };
 
@@ -62,7 +67,7 @@ export const routeUpdateApi = async (apiRoute, params) => {
     if (response.data.message) {
       toastContainer(response.status, response.data.message);
     }
-    return response;
+    return { ...response, success: true };
   } catch (error) {
     if (error?.response?.status && error?.response?.data?.message) {
       toastContainer(error.response.status, error.response.data.message);

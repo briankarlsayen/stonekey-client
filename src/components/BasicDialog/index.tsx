@@ -7,13 +7,28 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { closeDialog } from "../../reducers/dialogReducer";
-import { useEffect } from "react";
+import { handleOpenDialog } from "../../reducers/dialogReducer";
+import BasicButton from "../BasicButton";
+import { useState } from "react";
 
-function BasicDialog({ open, title, content }) {
+function BasicDialog({
+  open,
+  title,
+  content,
+  handleContinue,
+  color,
+  continueLabel,
+}) {
   const dispatch = useDispatch();
-  const handleCancel = () => dispatch(closeDialog());
+  const [isLoading, setLoading] = useState(false);
+  const handleCancel = () => dispatch(handleOpenDialog(false));
+
+  const clickContinue = async () => {
+    setLoading(true);
+    await handleContinue();
+    setLoading(false);
+  };
+
   return (
     <Dialog
       open={open}
@@ -29,7 +44,15 @@ function BasicDialog({ open, title, content }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button autoFocus>Continue</Button>
+        <BasicButton
+          autoFocus
+          onClick={clickContinue}
+          isLoading={isLoading}
+          color={color}
+          variant="contained"
+        >
+          {continueLabel}
+        </BasicButton>
       </DialogActions>
     </Dialog>
   );

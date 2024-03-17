@@ -29,10 +29,21 @@ export const createLockApi = async (props): Promise<void> => {
   }
 };
 
-export const editLockApi = async (id, props): Promise<void> => {
+export const editLockApi = async (id, params): Promise<void> => {
   if (await checkOnline()) {
-    const editLock = await routeUpdateApi("/updatelock/" + id, props);
+    const editLock = await routeUpdateApi({
+      apiRoute: "/updatelock/" + id,
+      params,
+    });
     console.log("edit", editLock);
+  }
+};
+export const deleteLockApi = async (id): Promise<GenericResponse> => {
+  if (await checkOnline()) {
+    const deleteLockRes = await routeUpdateApi({
+      apiRoute: "/archivelock/" + id,
+    });
+    if (deleteLockRes.success) return deleteLockRes;
   }
 };
 

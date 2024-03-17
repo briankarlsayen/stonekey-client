@@ -6,18 +6,23 @@ import FilterModal from "../../components/FilterModal";
 import CategoryModal from "../../components/CategoryModal";
 import { cardsData } from "./data";
 import theme from "../../theme";
-import { getCategoriesApi, getLocksApi, getLoginTypesApi } from "../../api/api";
+import {
+  deleteLockApi,
+  getCategoriesApi,
+  getLocksApi,
+  getLoginTypesApi,
+} from "../../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategories } from "../../reducers/categoryReducer";
 import { setLoginTypes } from "../../reducers/loginTypeReducer";
-import { setLocks } from "../../reducers/lockReducer";
+import { handleModal, setLocks } from "../../reducers/lockReducer";
 import { RootState } from "../../store";
 import BasicDialog from "../../components/BasicDialog";
-import { setDialog } from "../../reducers/dialogReducer";
+import { handleOpenDialog } from "../../reducers/dialogReducer";
 
 function LockManager() {
   const dispatch = useDispatch();
-  const { list } = useSelector((state: RootState) => state.lock);
+  const { list, selected } = useSelector((state: RootState) => state.lock);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 16;
 
@@ -42,29 +47,29 @@ function LockManager() {
     await getLoginTypesApi().then((res) => dispatch(setLoginTypes(res)));
     await getLocksApi().then((res) => dispatch(setLocks(res)));
   };
-  console.log("list", list);
 
   useEffect(() => {
     fetchDatas();
   }, []);
 
-  // const [open, setOpen] = useState(false);
+  const { open } = useSelector((state: RootState) => state.dialog);
 
-  const openDeleLockDialog = () => {
-    // setOpen(true);
-    dispatch(
-      setDialog({
-        open: true,
-        title: "Are you sure you want to delete lock",
-        content: "Press continue to delete lock permanently.",
-        // handleContinue: handleDeleteLock.toString(),
-      })
-    );
+  const deleteLock = async () => {
+    console.log("delete");
+    console.log("lock id", selected);
+    const lockDeleted = await deleteLockApi(selected?._id);
+    dispatch(handleOpenDialog(false));
+    dispatch(handleModal({ isOpen: false }));
   };
 
-  const { open, title, content } = useSelector(
-    (state: RootState) => state.dialog
-  );
+  const deleteLockDialogDetails = {
+    open,
+    title: "Are you sure you want to delete lock?",
+    content: "Press delete to delete lock permanently.",
+    handleContinue: deleteLock,
+    color: "error",
+    continueLabel: "Delete",
+  };
 
   return (
     <Box height="100%">
@@ -82,12 +87,11 @@ function LockManager() {
           paddingBottom: mobileSize ? "6rem" : 0,
         }}
       />
-      <Button onClick={openDeleLockDialog}>Open</Button>
       {/* modals */}
       <LockModal />
       <FilterModal />
       <CategoryModal />
-      <BasicDialog open={open} title={title} content={content} />
+      <BasicDialog {...deleteLockDialogDetails} />
     </Box>
   );
 }

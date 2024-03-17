@@ -17,16 +17,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { handleModal } from "../../reducers/lockReducer";
 import { createLockApi, editLockApi } from "../../api/api";
-import { setDialog } from "../../reducers/dialogReducer";
+import { handleOpenDialog } from "../../reducers/dialogReducer";
+import BasicButton from "../BasicButton";
+import { refreshLocks } from "../../utils/hooks";
 
 const DEFAULT_LOGIN_TYPE_CODE = "UP";
 
 function LockModal() {
+  const dispatch = useDispatch();
   const { isOpen: open, modalType } = useSelector(
     (state: RootState) => state.lock
   );
   const { list } = useSelector((state: RootState) => state.loginType);
   const { selected } = useSelector((state: RootState) => state.lock);
+  const { list: categoryList } = useSelector(
+    (state: RootState) => state.category
+  );
+  const [isLoading, setLoading] = useState(false);
 
   const loginTypeList = list.map((item) => {
     return {
@@ -37,25 +44,25 @@ function LockModal() {
     };
   });
 
-  const { list: categoryList } = useSelector(
-    (state: RootState) => state.category
-  );
-
-  const dispatch = useDispatch();
   const handleClose = () => {
     dispatch(handleModal({ isOpen: false }));
   };
 
-  const handleSubmit = (e) => {
+  // refresh lock list on redux
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     if (modalType === "add") {
-      handleAddLock();
+      await handleAddLock();
+      // refreshLocks();
+      dispatch(handleModal({ isOpen: false }));
     } else if (modalType === "edit") {
-      handleEditLock();
+      await handleEditLock();
+      dispatch(handleModal({ isOpen: false }));
     } else {
       dispatch(handleModal({ isOpen: true, modalType: "edit" }));
     }
+    setLoading(false);
   };
 
   const handleAddLock = async () => {
@@ -77,19 +84,8 @@ function LockModal() {
     await editLockApi(selected?._id, editLockParams);
   };
 
-  const handleDeleteLock = async () => {
-    console.log("delete lock");
-  };
-
   const openDeleLockDialog = () => {
-    dispatch(
-      setDialog({
-        open: true,
-        title: "Are you sure you want to delete lock",
-        content: "Press continue to delete lock permanently.",
-        // handleContinue: handleDeleteLock.toString(),
-      })
-    );
+    dispatch(handleOpenDialog(true));
   };
 
   const handleCancel = () => {
@@ -237,6 +233,7 @@ function LockModal() {
           loginTypeList={loginTypeList}
           loginTypeObj={loginTypeObj}
           openDeleLockDialog={openDeleLockDialog}
+          isLoading={isLoading}
         />
       </Box>
     </Modal>
@@ -254,45 +251,63 @@ const LockModalForm = ({
   loginTypeList,
   loginTypeObj,
   openDeleLockDialog,
+  isLoading,
 }) => {
   const ActionButton = () => {
     switch (modalType) {
       case "view":
         return (
           <Box display="flex" flexDirection="column" gap={2}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <BasicButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
               Edit
-            </Button>
-            <Button
+            </BasicButton>
+            <BasicButton
               variant="outlined"
               color="error"
               fullWidth
               onClick={openDeleLockDialog}
             >
               Delete
-            </Button>
+            </BasicButton>
           </Box>
         );
       case "add":
         return (
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <BasicButton
+            isLoading={isLoading}
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+          >
             Submit
-          </Button>
+          </BasicButton>
         );
       case "edit":
         return (
           <Box display="flex" flexDirection="column" gap={2}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <BasicButton
+              isLoading={isLoading}
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
               Submit
-            </Button>
-            <Button
+            </BasicButton>
+            <BasicButton
               variant="outlined"
               color="primary"
               fullWidth
               onClick={handleCancel}
             >
               Cancel
-            </Button>
+            </BasicButton>
           </Box>
         );
     }
