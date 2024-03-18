@@ -43,7 +43,9 @@ function BasicDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button onClick={handleCancel} color="secondary">
+          Cancel
+        </Button>
         <BasicButton
           autoFocus
           onClick={clickContinue}

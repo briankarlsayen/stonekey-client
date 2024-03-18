@@ -54,10 +54,11 @@ function LockModal() {
     setLoading(true);
     if (modalType === "add") {
       await handleAddLock();
-      // refreshLocks();
+      await refreshLocks();
       dispatch(handleModal({ isOpen: false }));
     } else if (modalType === "edit") {
       await handleEditLock();
+      await refreshLocks();
       dispatch(handleModal({ isOpen: false }));
     } else {
       dispatch(handleModal({ isOpen: true, modalType: "edit" }));
@@ -444,6 +445,7 @@ const LockLoginInfo = ({
           value={input?.username}
           onChange={updateField}
           disabled={modalType === "view"}
+          autoComplete="off"
         />
       </Grid>
       {loginTypeObj.passwordRequired && (
@@ -457,6 +459,7 @@ const LockLoginInfo = ({
               value={input?.password}
               onChange={updateField}
               disabled={modalType === "view"}
+              autoComplete="off"
             />
             <Button
               onClick={handleGeneratePassword}

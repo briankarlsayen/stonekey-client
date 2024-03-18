@@ -1,6 +1,5 @@
 import { Avatar, Box, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch } from "react-redux";
 import { handleSelectCard } from "../../reducers/lockReducer";
 
 const boxSx = {
@@ -35,10 +34,16 @@ function LockCard(props) {
       >
         <Typography variant="h4">{props.title.slice(0, 1)}</Typography>
       </Avatar>
-      <Typography variant="h6" pt={2}>
+      <Typography
+        variant="h6"
+        pt={2}
+        style={{ wordWrap: "break-word", overflowWrap: "anywhere" }}
+      >
         {props.title}
       </Typography>
-      <Typography>{props.username}</Typography>
+      <Typography style={{ wordWrap: "break-word", overflowWrap: "anywhere" }}>
+        {props.username}
+      </Typography>
     </Box>
   );
 }

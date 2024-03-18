@@ -19,6 +19,7 @@ import { handleModal, setLocks } from "../../reducers/lockReducer";
 import { RootState } from "../../store";
 import BasicDialog from "../../components/BasicDialog";
 import { handleOpenDialog } from "../../reducers/dialogReducer";
+import { refreshLocks } from "../../utils/hooks";
 
 function LockManager() {
   const dispatch = useDispatch();
@@ -57,7 +58,8 @@ function LockManager() {
   const deleteLock = async () => {
     console.log("delete");
     console.log("lock id", selected);
-    const lockDeleted = await deleteLockApi(selected?._id);
+    await deleteLockApi(selected?._id);
+    await refreshLocks();
     dispatch(handleOpenDialog(false));
     dispatch(handleModal({ isOpen: false }));
   };
