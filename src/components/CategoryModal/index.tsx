@@ -1,7 +1,6 @@
 import { Close } from "@mui/icons-material";
 import {
   Box,
-  Button,
   Grid,
   IconButton,
   Modal,
@@ -11,20 +10,58 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { handleCategoryModal } from "../../reducers/categoryReducer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createCategoryApi, editCategoryApi } from "../../api/api";
+import BasicButton from "../BasicButton";
+import { refreshCategories } from "../../utils/hooks";
 
 function CategoryModal() {
-  const categoryState = useSelector((state: RootState) => state.category);
-  const { isOpen: open, modalType } = categoryState?.categoryModal;
+  const { categoryModal, selected } = useSelector(
+    (state: RootState) => state.category
+  );
+  const { isOpen: open, modalType } = categoryModal;
   const dispatch = useDispatch();
   const handleClose = () => {
     dispatch(handleCategoryModal({ isOpen: false }));
+    setInput({ title: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit edit category");
+    setLoading(true);
+    if (modalType === "add") await addCategory();
+    else {
+      await editCategory();
+    }
+    setLoading(false);
+    handleClose();
+    await refreshCategories();
   };
+
+  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState({
+    title: "",
+  });
+  const updateField = (e) => {
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const addCategory = async () => {
+    await createCategoryApi(input);
+  };
+
+  const editCategory = async () => {
+    await editCategoryApi(selected._id, input);
+  };
+
+  useEffect(() => {
+    if (modalType === "edit") {
+      setInput({ title: selected?.title });
+    }
+  }, [open]);
 
   return (
     <Modal
@@ -60,42 +97,43 @@ function CategoryModal() {
           </IconButton>
         </Box>
         <Box>
-          <CategoryForm handleSubmit={handleSubmit} />
+          <CategoryForm
+            handleSubmit={handleSubmit}
+            updateField={updateField}
+            input={input}
+            loading={loading}
+          />
         </Box>
       </Box>
     </Modal>
   );
 }
 
-const CategoryForm = ({ handleSubmit }) => {
-  const [input, setInput] = useState({
-    name: "",
-  });
-  const updateField = (e) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+const CategoryForm = ({ handleSubmit, input, updateField, loading }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Box>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              name="name"
+              name="title"
               label="Name"
               variant="outlined"
               fullWidth
-              value={input?.name}
+              value={input?.title}
               onChange={updateField}
+              focused
             />
           </Grid>
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" type="submit">
+            <BasicButton
+              fullWidth
+              variant="contained"
+              type="submit"
+              isLoading={loading}
+            >
               Submit
-            </Button>
+            </BasicButton>
           </Grid>
         </Grid>
       </Box>

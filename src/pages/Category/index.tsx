@@ -2,10 +2,11 @@ import { Box, Button, Typography } from "@mui/material";
 import CategoryModal from "../../components/CategoryModal";
 import CategoryTable from "../../components/CategoryTable";
 import { Add } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleCategoryModal } from "../../reducers/categoryReducer";
 import DeleteModal from "../../components/DeleteModal";
 import { handleDeleteModal } from "../../reducers/globalReducer";
+import { RootState } from "../../store";
 
 function Category() {
   const dispatch = useDispatch();
@@ -28,6 +29,10 @@ function Category() {
     );
   };
 
+  const { list: categoryList } = useSelector(
+    (state: RootState) => state.category
+  );
+
   return (
     <Box>
       <Box
@@ -43,7 +48,7 @@ function Category() {
           Add
         </Button>
       </Box>
-      <CategoryTable />
+      <CategoryTable categoryList={categoryList} />
       <CategoryModal />
       <DeleteModal
         description="Do you want to delete this category?"

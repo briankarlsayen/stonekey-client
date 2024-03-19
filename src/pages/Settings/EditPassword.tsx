@@ -1,17 +1,25 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
 import PasswordInput from "../../components/PasswordInput";
+import { editPasswordApi } from "../../api/api";
+import BasicButton from "../../components/BasicButton";
 
 function EditPassword() {
   const [input, setInput] = useState({
-    oldPassword: "",
     password: "",
+    newPassword: "",
   });
   const [isError, setError] = useState(false);
-  const handleSubmit = (e) => {
+  const [loading, isLoading] = useState(false);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("input", input);
-    if (input.password !== "password") setError(true);
+    isLoading(true);
+    const edit = await editPasswordApi(input);
+    console.log("edit", edit);
+    isLoading(false);
+
+    // if (input.password !== "password") setError(true);
   };
 
   const updateField = (e) => {
@@ -24,10 +32,10 @@ function EditPassword() {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <PasswordInput
-            name="oldPassword"
-            value={input.oldPassword}
+            name="password"
+            value={input.password}
             fullWidth
-            label="Old Password"
+            label="Password"
             onChange={updateField}
             error={isError}
           />
@@ -35,9 +43,9 @@ function EditPassword() {
         <Grid item xs={12}>
           <PasswordInput
             fullWidth
-            name="password"
-            label="Password"
-            value={input.password}
+            name="newPassword"
+            label="New Password"
+            value={input.newPassword}
             onChange={updateField}
             error={isError}
           />
@@ -49,9 +57,15 @@ function EditPassword() {
         </Typography>
       )}
       <Box display="flex" flexDirection="row-reverse" pt={2} gap={2}>
-        <Button type="submit" variant="contained" color="primary">
+        <BasicButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          isLoading={loading}
+          disabled={!input.newPassword || !input.password}
+        >
           Change
-        </Button>
+        </BasicButton>
       </Box>
     </form>
   );

@@ -3,7 +3,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export interface CategoryState {
   list: Category[];
   selected?: {
-    id?: string;
+    _id?: string;
+    title: string;
   };
   categoryModal: {
     isOpen: boolean;
@@ -29,9 +30,10 @@ const categoryReducer = createSlice({
   initialState,
   reducers: {
     handleCategoryModal: (state, action) => {
-      const { isOpen, modalType } = action.payload;
+      const { isOpen, modalType, selected } = action.payload;
       state.categoryModal.isOpen = isOpen;
       state.categoryModal.modalType = modalType;
+      state.selected = selected;
     },
     setCategories: (state, action) => {
       state.list = action.payload;

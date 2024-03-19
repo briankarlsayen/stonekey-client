@@ -1,17 +1,33 @@
 import { Delete, Upload } from "@mui/icons-material";
-import { Box, Button, Grid, IconButton, TextField } from "@mui/material";
+import { Box, Grid, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 
 import profileImage from "../../assets/dog-img.jpg";
+import { editUserApi } from "../../api/api";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
+import BasicButton from "../../components/BasicButton";
 
 function General() {
+  const { id, firstName, lastName, emailAddress, image } = useSelector(
+    (state: RootState) => state.account
+  );
+
   const [input, setInput] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName,
+    lastName,
+    emailAddress,
+    image,
   });
 
-  const handleSubmit = () => {};
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await editUserApi(input);
+    setLoading(false);
+  };
 
   const updateField = (e) => {
     setInput({
@@ -19,7 +35,6 @@ function General() {
       [e.target.name]: e.target.value,
     });
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
@@ -71,19 +86,24 @@ function General() {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            name="email"
+            name="emailAddress"
             label="Email"
             variant="outlined"
             fullWidth
-            value={input?.email}
+            value={input?.emailAddress}
             onChange={updateField}
           />
         </Grid>
       </Grid>
       <Box display="flex" flexDirection="row-reverse" pt={2} gap={2}>
-        <Button type="submit" variant="contained" color="primary">
+        <BasicButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          isLoading={loading}
+        >
           Save
-        </Button>
+        </BasicButton>
       </Box>
     </form>
   );

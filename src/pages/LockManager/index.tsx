@@ -1,21 +1,14 @@
-import { Box, Button, Pagination, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Pagination, useMediaQuery } from "@mui/material";
+import { useState } from "react";
 import LockList from "../../components/LockList";
 import LockModal from "../../components/LockModal";
 import FilterModal from "../../components/FilterModal";
 import CategoryModal from "../../components/CategoryModal";
 import { cardsData } from "./data";
 import theme from "../../theme";
-import {
-  deleteLockApi,
-  getCategoriesApi,
-  getLocksApi,
-  getLoginTypesApi,
-} from "../../api/api";
+import { deleteLockApi } from "../../api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategories } from "../../reducers/categoryReducer";
-import { setLoginTypes } from "../../reducers/loginTypeReducer";
-import { handleModal, setLocks } from "../../reducers/lockReducer";
+import { handleModal } from "../../reducers/lockReducer";
 import { RootState } from "../../store";
 import BasicDialog from "../../components/BasicDialog";
 import { handleOpenDialog } from "../../reducers/dialogReducer";
@@ -35,29 +28,11 @@ function LockManager() {
   };
 
   const currentCards = cardsData.slice(indexOfFirstCard, indexOfLastCard);
-  const [lockList, setLockList] = useState([]);
-  // const mobileSize = false;
   const mobileSize = useMediaQuery(theme.breakpoints.down("lg"));
-
-  // const fetchLockData = async () => {
-  //   await getLocksApi();
-  // };
-
-  const fetchDatas = async () => {
-    await getCategoriesApi().then((res) => dispatch(setCategories(res)));
-    await getLoginTypesApi().then((res) => dispatch(setLoginTypes(res)));
-    await getLocksApi().then((res) => dispatch(setLocks(res)));
-  };
-
-  useEffect(() => {
-    fetchDatas();
-  }, []);
 
   const { open } = useSelector((state: RootState) => state.dialog);
 
   const deleteLock = async () => {
-    console.log("delete");
-    console.log("lock id", selected);
     await deleteLockApi(selected?._id);
     await refreshLocks();
     dispatch(handleOpenDialog(false));

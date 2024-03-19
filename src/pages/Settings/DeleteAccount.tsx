@@ -1,14 +1,29 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { deleteAccountApi } from "../../api/api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { useNavigate } from "react-router-dom";
+import BasicButton from "../../components/BasicButton";
 
+// delete account on indexdb
 function DeleteAccount() {
   const [inputText, setInputText] = useState("");
   const [isError, setError] = useState(false);
-  const handleDelete = (e) => {
+  const [loading, setLoading] = useState(false);
+  const { id } = useSelector((state: RootState) => state.account);
+  const navigate = useNavigate();
+
+  const handleDelete = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const checkError = inputText.toLowerCase() !== "delete";
     setError(checkError);
-    if (!checkError) alert("submit"); // run delete api
+    if (!checkError) {
+      const response = await deleteAccountApi(id);
+      setLoading(false);
+      if (response.success) navigate("/login");
+    }
   };
 
   const updateField = (e) => {
@@ -34,9 +49,14 @@ function DeleteAccount() {
           helperText={isError ? "Invalid input" : false}
         />
         <Box display="flex" flexDirection="row-reverse" pt={2}>
-          <Button type="submit" color="error" variant="contained">
+          <BasicButton
+            type="submit"
+            color="error"
+            variant="contained"
+            isLoading={loading}
+          >
             Delete
-          </Button>
+          </BasicButton>
         </Box>
       </form>
     </Box>

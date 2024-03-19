@@ -35,14 +35,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   padding: 12,
 }));
 
-const CategoryTable = () => {
+const CategoryTable = ({ categoryList }) => {
   const generateData = Array.from({ length: 25 }, (_, index) => ({
     id: index + 1,
     name: `Item ${index + 1}`,
   }));
   const dispatch = useDispatch();
 
-  const [data, setData] = useState(generateData);
+  // const [categoryList, setData] = useState(generateData);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -54,7 +54,14 @@ const CategoryTable = () => {
   };
 
   const handleEdit = (id) => {
-    dispatch(handleCategoryModal({ isOpen: true, modalType: "edit" }));
+    const categoryDetails = categoryList.find((e) => e._id === id);
+    dispatch(
+      handleCategoryModal({
+        isOpen: true,
+        modalType: "edit",
+        selected: categoryDetails,
+      })
+    );
     console.log(`Edit item with id: ${id}`);
   };
 
@@ -80,16 +87,16 @@ const CategoryTable = () => {
             </TableHead>
             <TableBody>
               {(rowsPerPage > 0
-                ? data.slice(
+                ? categoryList.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage
                   )
-                : data
+                : categoryList
               ).map((item) => (
-                <StyledTableRow key={item.id}>
-                  <StyledTableCell>{item.name}</StyledTableCell>
+                <StyledTableRow key={item._id}>
+                  <StyledTableCell>{item.title}</StyledTableCell>
                   <StyledTableCell>
-                    <IconButton onClick={() => handleEdit(item.id)}>
+                    <IconButton onClick={() => handleEdit(item._id)}>
                       <Edit />
                     </IconButton>
                     <IconButton
@@ -108,7 +115,7 @@ const CategoryTable = () => {
       <TablePagination
         rowsPerPageOptions={[10, 25]}
         component="div"
-        count={data.length}
+        count={categoryList.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

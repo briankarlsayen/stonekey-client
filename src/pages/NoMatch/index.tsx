@@ -1,11 +1,10 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function NoMatch() {
   const navigate = useNavigate();
   const handleBackToHome = () => {
-    navigate("/lock-manager");
+    navigate("/login");
   };
   return (
     <Box height="100vh" display="flex" alignItems="center">
@@ -26,7 +25,7 @@ function NoMatch() {
           exist.
         </Typography>
         <Button onClick={handleBackToHome} variant="contained">
-          Go to Home
+          Go to Login
         </Button>
       </Container>
     </Box>

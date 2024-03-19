@@ -1,4 +1,5 @@
 import { routeGetApi, routePostApi, routeUpdateApi } from ".";
+import { CreateCategoryProps } from "../interfaces/category.interface";
 import { checkOnline } from "../utils/utils";
 
 interface GenericResponse {
@@ -52,10 +53,24 @@ export const getCategoriesApi = async (): Promise<void> => {
   let categories;
   if (await checkOnline()) {
     const response = await routeGetApi("/displaycategories");
-    // return response
     categories = response?.data;
   }
   return categories;
+};
+export const createCategoryApi = async (
+  props: CreateCategoryProps
+): Promise<void> => {
+  if (await checkOnline()) {
+    await routePostApi("/createcategory", props);
+  }
+};
+export const editCategoryApi = async (id, params): Promise<void> => {
+  if (await checkOnline()) {
+    await routeUpdateApi({
+      apiRoute: "/updatecategory/" + id,
+      params,
+    });
+  }
 };
 
 // login types
@@ -67,4 +82,40 @@ export const getLoginTypesApi = async (): Promise<void> => {
     loginTypes = response?.data;
   }
   return loginTypes;
+};
+
+// user
+export const editUserApi = async (params): Promise<void> => {
+  if (await checkOnline()) {
+    await routeUpdateApi({
+      apiRoute: "/updateaccount",
+      params,
+    });
+  }
+};
+
+export const getAccountApi = async (): Promise<void> => {
+  let categories;
+  if (await checkOnline()) {
+    const response = await routeGetApi("/viewuser");
+    categories = response?.data;
+  }
+  return categories;
+};
+
+export const editPasswordApi = async (params): Promise<GenericResponse> => {
+  if (await checkOnline()) {
+    return await routeUpdateApi({
+      apiRoute: "/updatepassword",
+      params,
+    });
+  }
+};
+
+export const deleteAccountApi = async (id): Promise<GenericResponse> => {
+  if (await checkOnline()) {
+    return await routeUpdateApi({
+      apiRoute: "/archiveuser/" + id,
+    });
+  }
 };
