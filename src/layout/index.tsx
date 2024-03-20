@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import "./index.css";
 import Navbar from "../components/Navbar";
 import {
@@ -14,35 +14,62 @@ import { setLoginTypes } from "../reducers/loginTypeReducer";
 import { setCategories } from "../reducers/categoryReducer";
 import { useEffect, useState } from "react";
 import { setAccountDetails } from "../reducers/accountReducer";
-import PageNotFound from "../pages/NotFound";
 import NoMatch from "../pages/NoMatch";
+import Spinner from "../assets/chick-spinner.gif";
+import { setGlobalError } from "../reducers/globalReducer";
 
 function Layout() {
   console.log("refresh layout");
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const navigate = useNavigate();
 
   const fetchDatas = async () => {
     try {
       setLoading(true);
-      await getAccountApi()
-        .then((res) => dispatch(setAccountDetails(res)))
-        .catch((error) => setError(true));
-      await getCategoriesApi().then((res) => dispatch(setCategories(res)));
-      await getLoginTypesApi().then((res) => dispatch(setLoginTypes(res)));
-      await getLocksApi().then((res) => dispatch(setLocks(res)));
+      await getAccountApi().then((res) => {
+        if (res?.success) dispatch(setAccountDetails(res.data));
+        else {
+          // if token expired
+          if (res.name === "TokenExpiredError") {
+            dispatch(
+              setGlobalError({
+                type: "expired-jwt",
+                text: "Your session has expired",
+              })
+            );
+            navigate("/login");
+          } else if (res.name === "JsonWebTokenError") {
+            dispatch(
+              setGlobalError({
+                type: "no-token",
+              })
+            );
+          }
+
+          // if no token or others, show error page
+          setError(true);
+        }
+      });
+
+      await getCategoriesApi().then(
+        (res) => res && dispatch(setCategories(res))
+      );
+      await getLoginTypesApi().then(
+        (res) => res && dispatch(setLoginTypes(res))
+      );
+      await getLocksApi().then((res) => res && dispatch(setLocks(res)));
       setLoading(false);
     } catch (error) {
       setError(true);
-      console.log("errasdas", error);
     }
   };
 
   useEffect(() => {
     fetchDatas();
   }, []);
-  console.log("error", error);
 
   const content = () => {
     switch (true) {
@@ -50,8 +77,16 @@ function Layout() {
         return <NoMatch />;
       case loading:
         return (
-          <Box>
-            <Typography>Loading...</Typography>
+          <Box
+            display="flex"
+            justifyContent="center"
+            height="100vh"
+            alignItems="center"
+          >
+            <Box textAlign="center">
+              <img src={Spinner} alt="loading-icon" />
+              <Typography variant="h6">Loading files, please wait</Typography>
+            </Box>
           </Box>
         );
       default:

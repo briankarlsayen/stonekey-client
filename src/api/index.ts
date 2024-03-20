@@ -34,7 +34,6 @@ export const routePostApi = async (
     }
     return { ...response, success: true };
   } catch (error) {
-    // console.log("error", error.response);
     if (error?.response?.status && error?.response?.data?.message) {
       toastContainer(error.response.status, error.response.data.message);
     } else {
@@ -56,6 +55,7 @@ export const routeGetApi = async (apiRoute) => {
     } else {
       toast("Server error, please try again");
     }
+    return error?.response?.data;
   }
 };
 
@@ -80,8 +80,6 @@ export const routeUpdateApi = async ({ apiRoute, params }: PutApiProps) => {
 const toastContainer = (status, message) => {
   let errMessage = "Server error, please try again";
   let action = "success";
-  console.log("status", status);
-  console.log("message", message);
 
   const toastParams: ToastOptions = {
     position: "top-right",
@@ -122,9 +120,15 @@ const toastContainer = (status, message) => {
   if (action === "success") {
     toast.success(errMessage, toastParams);
   } else {
-    toast.error(errMessage, toastParams);
     if (status === 403) {
-      localStorage.removeItem("auth-token");
+      // jwt expired
+      return;
+      // localStorage.removeItem("auth-token");
     }
+    if (status == 401) {
+      // no auth token
+      return;
+    }
+    toast.error(errMessage, toastParams);
   }
 };

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import CategoryModal from "../../components/CategoryModal";
 import CategoryTable from "../../components/CategoryTable";
 import { Add } from "@mui/icons-material";
@@ -34,26 +34,32 @@ function Category() {
   );
 
   return (
-    <Box>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        pb={2}
-      >
-        <Typography variant="h5">Category List</Typography>
+    <Box py={2}>
+      <Paper elevation={3} style={{ padding: "20px" }}>
+        <Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            pb={2}
+          >
+            <Typography variant="h5">Categories</Typography>
 
-        <Button variant="contained" onClick={handleAddButton}>
-          <Add />
-          Add
-        </Button>
-      </Box>
-      <CategoryTable categoryList={categoryList} />
-      <CategoryModal />
-      <DeleteModal
-        description="Do you want to delete this category?"
-        handleDelete={handleDelete}
-      />
+            <Button variant="contained" onClick={handleAddButton}>
+              <Add />
+              Add
+            </Button>
+          </Box>
+          <Box>
+            <CategoryTable categoryList={categoryList} />
+          </Box>
+          <CategoryModal />
+          <DeleteModal
+            description="Do you want to delete this category?"
+            handleDelete={handleDelete}
+          />
+        </Box>
+      </Paper>
     </Box>
   );
 }

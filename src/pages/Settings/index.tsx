@@ -42,14 +42,7 @@ function Settings() {
   ];
 
   return (
-    <Box>
-      <Box pb={2}>
-        <Typography component="span">brian sayen /</Typography>
-        <Typography pb={2} fontWeight={600} component="span">
-          {" "}
-          Settings
-        </Typography>
-      </Box>
+    <Box py={2}>
       <SettingsForm
         handleCancel={handleCancel}
         handleSidebarClick={handleSidebarClick}

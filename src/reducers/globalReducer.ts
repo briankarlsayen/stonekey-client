@@ -4,12 +4,17 @@ export interface GlobalState {
   deleteModal: {
     isOpen: boolean;
   };
+  error?: {
+    type?: "expired-jwt" | "no-token";
+    text?: string;
+  };
 }
 
 const initialState: GlobalState = {
   deleteModal: {
     isOpen: false,
   },
+  error: null,
 };
 
 const globalReducer = createSlice({
@@ -20,8 +25,17 @@ const globalReducer = createSlice({
       const { isOpen } = action.payload;
       state.deleteModal.isOpen = isOpen;
     },
+    setGlobalError: (
+      state,
+      action: PayloadAction<{
+        type?: "expired-jwt" | "no-token";
+        text?: string;
+      }>
+    ) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { handleDeleteModal } = globalReducer.actions;
+export const { handleDeleteModal, setGlobalError } = globalReducer.actions;
 export default globalReducer.reducer;

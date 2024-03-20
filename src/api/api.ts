@@ -15,7 +15,7 @@ export const loginApi = async (input): Promise<GenericResponse> => {
 };
 
 // locks
-export const getLocksApi = async (): Promise<void> => {
+export const getLocksApi = async () => {
   let locks;
   if (await checkOnline()) {
     const response = await routeGetApi("/viewlocks");
@@ -24,19 +24,18 @@ export const getLocksApi = async (): Promise<void> => {
   return locks;
 };
 
-export const createLockApi = async (props): Promise<void> => {
+export const createLockApi = async (props) => {
   if (await checkOnline()) {
     await routePostApi("/createlock", props);
   }
 };
 
-export const editLockApi = async (id, params): Promise<void> => {
+export const editLockApi = async (id, params) => {
   if (await checkOnline()) {
     const editLock = await routeUpdateApi({
       apiRoute: "/updatelock/" + id,
       params,
     });
-    console.log("edit", editLock);
   }
 };
 export const deleteLockApi = async (id): Promise<GenericResponse> => {
@@ -49,7 +48,7 @@ export const deleteLockApi = async (id): Promise<GenericResponse> => {
 };
 
 // categories
-export const getCategoriesApi = async (): Promise<void> => {
+export const getCategoriesApi = async () => {
   let categories;
   if (await checkOnline()) {
     const response = await routeGetApi("/displaycategories");
@@ -57,14 +56,12 @@ export const getCategoriesApi = async (): Promise<void> => {
   }
   return categories;
 };
-export const createCategoryApi = async (
-  props: CreateCategoryProps
-): Promise<void> => {
+export const createCategoryApi = async (props: CreateCategoryProps) => {
   if (await checkOnline()) {
     await routePostApi("/createcategory", props);
   }
 };
-export const editCategoryApi = async (id, params): Promise<void> => {
+export const editCategoryApi = async (id, params) => {
   if (await checkOnline()) {
     await routeUpdateApi({
       apiRoute: "/updatecategory/" + id,
@@ -74,7 +71,7 @@ export const editCategoryApi = async (id, params): Promise<void> => {
 };
 
 // login types
-export const getLoginTypesApi = async (): Promise<void> => {
+export const getLoginTypesApi = async () => {
   let loginTypes;
   if (await checkOnline()) {
     const response = await routeGetApi("/displaylogintype");
@@ -85,7 +82,7 @@ export const getLoginTypesApi = async (): Promise<void> => {
 };
 
 // user
-export const editUserApi = async (params): Promise<void> => {
+export const editUserApi = async (params) => {
   if (await checkOnline()) {
     await routeUpdateApi({
       apiRoute: "/updateaccount",
@@ -94,11 +91,15 @@ export const editUserApi = async (params): Promise<void> => {
   }
 };
 
-export const getAccountApi = async (): Promise<void> => {
+export const getAccountApi = async () => {
   let categories;
   if (await checkOnline()) {
     const response = await routeGetApi("/viewuser");
-    categories = response?.data;
+    categories = {
+      ...response,
+      ...response?.data,
+      name: response?.name,
+    };
   }
   return categories;
 };

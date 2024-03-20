@@ -1,10 +1,21 @@
 import { Box, Button, Container, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../store";
+import { getAuthDetails } from "../../api/db/dexieApi";
+
+// check if has auth token
 
 function NoMatch() {
   const navigate = useNavigate();
-  const handleBackToHome = () => {
-    navigate("/login");
+  const { error } = useSelector((state: RootState) => state.global);
+
+  const handleBackToHome = async () => {
+    const authDetails = await getAuthDetails();
+    navigate("/lock-manager");
+    if (error?.type === "no-token" || !authDetails) {
+      navigate("/login");
+    }
   };
   return (
     <Box height="100vh" display="flex" alignItems="center">
@@ -25,7 +36,7 @@ function NoMatch() {
           exist.
         </Typography>
         <Button onClick={handleBackToHome} variant="contained">
-          Go to Login
+          Go to Back
         </Button>
       </Container>
     </Box>

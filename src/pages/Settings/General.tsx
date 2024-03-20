@@ -38,7 +38,7 @@ function General() {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Box display="flex" alignItems="center" justifyContent="center">
             <Box
               display="flex"
@@ -63,7 +63,7 @@ function General() {
               </Box>
             </Box>
           </Box>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} md={6}>
           <TextField
             name="firstName"

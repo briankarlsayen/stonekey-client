@@ -32,17 +32,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
   },
-  padding: 12,
+  padding: 8,
 }));
 
 const CategoryTable = ({ categoryList }) => {
-  const generateData = Array.from({ length: 25 }, (_, index) => ({
-    id: index + 1,
-    name: `Item ${index + 1}`,
-  }));
   const dispatch = useDispatch();
-
-  // const [categoryList, setData] = useState(generateData);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -76,42 +70,44 @@ const CategoryTable = ({ categoryList }) => {
 
   return (
     <div>
-      <Paper elevation={3}>
-        <TableContainer sx={{ borderRadius: "5px" }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell sx={{ paddingY: 2.5 }}>Name</StyledTableCell>
-                <StyledTableCell width={150}>Actions</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? categoryList.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : categoryList
-              ).map((item) => (
-                <StyledTableRow key={item._id}>
-                  <StyledTableCell>{item.title}</StyledTableCell>
-                  <StyledTableCell>
-                    <IconButton onClick={() => handleEdit(item._id)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDelete(item.id)}
-                      color="secondary"
-                    >
-                      <Delete />
-                    </IconButton>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      {/* <Paper elevation={3}> */}
+      <TableContainer
+        sx={{ borderRadius: "5px", border: "1px solid lightGray" }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell sx={{ paddingY: 2.5 }}>Name</StyledTableCell>
+              <StyledTableCell width={150}>Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? categoryList.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : categoryList
+            ).map((item) => (
+              <StyledTableRow key={item._id}>
+                <StyledTableCell>{item.title}</StyledTableCell>
+                <StyledTableCell>
+                  <IconButton onClick={() => handleEdit(item._id)}>
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDelete(item.id)}
+                    color="secondary"
+                  >
+                    <Delete />
+                  </IconButton>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* </Paper> */}
       <TablePagination
         rowsPerPageOptions={[10, 25]}
         component="div"

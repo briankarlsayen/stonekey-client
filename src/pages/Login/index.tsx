@@ -9,9 +9,14 @@ import {
   getAuthDetails,
   storeAuthDetails,
 } from "../../api/db/dexieApi";
+import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { setGlobalError } from "../../reducers/globalReducer";
 
 function Login() {
   const navigate = useNavigate();
+
+  const { error } = useSelector((state: RootState) => state.global);
 
   const [input, setInput] = useState({
     emailAddress: "",
@@ -19,14 +24,17 @@ function Login() {
     masterKey: "",
   });
   const [isError, setError] = useState(false);
-  const [errorText, setErrorText] = useState("");
+  const [errorText, setErrorText] = useState(error?.text ?? null);
   const [isLoading, setLoading] = useState(false);
 
   const [isCredStored, setCredStored] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    dispatch(setGlobalError({}));
+
     const response = await routePostApi("/login", input);
     setLoading(false);
     if (!response.success) {
@@ -65,8 +73,16 @@ function Login() {
     setInput({ emailAddress: "", password: "", masterKey: "" });
   };
 
+  const checkGlobalErr = () => {
+    if (error?.type === "expired-jwt") {
+      setError(true);
+      setErrorText(error?.text);
+    }
+  };
+
   useEffect(() => {
     fetchAuthDetails();
+    checkGlobalErr();
   }, []);
 
   return (
@@ -156,7 +172,9 @@ const LoginForm = ({
             </Grid>
             {isError && (
               <Grid item xs={12}>
-                <Typography color="error">{errorText}</Typography>
+                <Typography color="error" fontWeight={500}>
+                  {errorText}
+                </Typography>
               </Grid>
             )}
             <Grid item xs={12} textAlign="end" width="100%">

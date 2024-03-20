@@ -35,14 +35,16 @@ function LockModal() {
   );
   const [isLoading, setLoading] = useState(false);
 
-  const loginTypeList = list.map((item) => {
-    return {
-      _id: item._id,
-      text: item.title,
-      value: item.code,
-      passwordRequired: item.passwordRequired,
-    };
-  });
+  const loginTypeList = list.length
+    ? list?.map((item) => {
+        return {
+          _id: item._id,
+          text: item.title,
+          value: item.code,
+          passwordRequired: item.passwordRequired,
+        };
+      })
+    : [];
 
   const handleClose = () => {
     dispatch(handleModal({ isOpen: false }));
@@ -76,7 +78,6 @@ function LockModal() {
   };
 
   const handleEditLock = async () => {
-    console.log("lock edit", selected);
     const editLockParams = {
       ...input,
       categoryArr: input?.categoryDetails?.map((item) => item._id),
@@ -104,7 +105,9 @@ function LockModal() {
     _id: "",
     logo: "",
     title: "",
-    loginTypeCode: loginTypeList[0]?.value ?? DEFAULT_LOGIN_TYPE_CODE,
+    loginTypeCode: loginTypeList?.length
+      ? loginTypeList[0]?.value
+      : DEFAULT_LOGIN_TYPE_CODE,
     username: "",
     password: "",
     category: "",

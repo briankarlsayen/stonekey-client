@@ -16,10 +16,11 @@ function DeleteAccount() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
     const checkError = inputText.toLowerCase() !== "delete";
     setError(checkError);
     if (!checkError) {
+      setLoading(true);
       const response = await deleteAccountApi(id);
       setLoading(false);
       if (response.success) navigate("/login");
