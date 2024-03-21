@@ -26,7 +26,7 @@ export const getLocksApi = async () => {
 
 export const createLockApi = async (props) => {
   if (await checkOnline()) {
-    await routePostApi("/createlock", props);
+    return await routePostApi("/createlock", props);
   }
 };
 
@@ -67,6 +67,14 @@ export const editCategoryApi = async (id, params) => {
       apiRoute: "/updatecategory/" + id,
       params,
     });
+  }
+};
+export const deleteCategoryApi = async (id): Promise<GenericResponse> => {
+  if (await checkOnline()) {
+    const deleteLockRes = await routeUpdateApi({
+      apiRoute: "/archivecategory/" + id,
+    });
+    if (deleteLockRes.success) return deleteLockRes;
   }
 };
 

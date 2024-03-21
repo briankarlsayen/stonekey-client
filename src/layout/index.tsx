@@ -75,20 +75,20 @@ function Layout() {
     switch (true) {
       case error:
         return <NoMatch />;
-      case loading:
-        return (
-          <Box
-            display="flex"
-            justifyContent="center"
-            height="100vh"
-            alignItems="center"
-          >
-            <Box textAlign="center">
-              <img src={Spinner} alt="loading-icon" />
-              <Typography variant="h6">Loading files, please wait</Typography>
-            </Box>
-          </Box>
-        );
+      // case loading:
+      //   return (
+      //     <Box
+      //       display="flex"
+      //       justifyContent="center"
+      //       height="100vh"
+      //       alignItems="center"
+      //     >
+      //       <Box textAlign="center">
+      //         <img src={Spinner} alt="loading-icon" />
+      //         <Typography variant="h6">Loading files, please wait</Typography>
+      //       </Box>
+      //     </Box>
+      //   );
       default:
         return (
           <Box display="flex">

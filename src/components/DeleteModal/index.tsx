@@ -3,6 +3,8 @@ import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { handleDeleteModal } from "../../reducers/globalReducer";
+import { useState } from "react";
+import BasicButton from "../BasicButton";
 
 interface DeleteModalProps {
   description: string;
@@ -11,11 +13,19 @@ interface DeleteModalProps {
 
 function DeleteModal({ description, handleDelete }: DeleteModalProps) {
   const globalState = useSelector((state: RootState) => state.global);
+  const [loading, setLoading] = useState(false);
   const { isOpen: open } = globalState?.deleteModal;
   const dispatch = useDispatch();
   const handleClose = () => {
     dispatch(handleDeleteModal({ isOpen: false }));
   };
+
+  const handleClickDelete = async () => {
+    setLoading(true);
+    await handleDelete();
+    setLoading(false);
+  };
+
   return (
     <Modal
       open={open}
@@ -50,12 +60,21 @@ function DeleteModal({ description, handleDelete }: DeleteModalProps) {
         <Box>
           <Typography pb={2}>{description}</Typography>
           <Box display="flex" flexDirection="row-reverse" gap={2}>
-            <Button variant="contained" color="error" onClick={handleDelete}>
+            <BasicButton
+              isLoading={loading}
+              variant="contained"
+              color="error"
+              onClick={handleClickDelete}
+            >
               Delete
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleClose}>
+            </BasicButton>
+            <BasicButton
+              variant="outlined"
+              color="secondary"
+              onClick={handleClose}
+            >
               Cancel
-            </Button>
+            </BasicButton>
           </Box>
         </Box>
       </Box>

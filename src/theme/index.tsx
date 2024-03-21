@@ -68,6 +68,28 @@ const theme = createTheme({
         },
       },
     },
+    MuiTablePagination: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
+
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Inter, sans-serif",

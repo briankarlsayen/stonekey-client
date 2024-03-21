@@ -55,9 +55,11 @@ function LockModal() {
     e.preventDefault();
     setLoading(true);
     if (modalType === "add") {
-      await handleAddLock();
-      await refreshLocks();
-      dispatch(handleModal({ isOpen: false }));
+      const lockAdded = await handleAddLock();
+      if (lockAdded) {
+        await refreshLocks();
+        dispatch(handleModal({ isOpen: false }));
+      }
     } else if (modalType === "edit") {
       await handleEditLock();
       await refreshLocks();
@@ -74,7 +76,8 @@ function LockModal() {
       categoryArr: input?.categoryDetails?.map((item) => item._id),
       loginTypeId: loginTypeObj?._id,
     };
-    await createLockApi(addLockParams);
+    const addLock = await createLockApi(addLockParams);
+    return !!addLock?.success;
   };
 
   const handleEditLock = async () => {
@@ -340,6 +343,7 @@ const LockModalForm = ({
             value={input?.title}
             onChange={updateField}
             disabled={modalType === "view"}
+            required
           />
         </Grid>
         <Grid item xs={12}>
@@ -352,6 +356,7 @@ const LockModalForm = ({
             value={input.loginTypeCode}
             onChange={updateField}
             disabled={modalType === "view"}
+            required
           />
         </Grid>
         <Grid item xs={12}>
@@ -449,6 +454,7 @@ const LockLoginInfo = ({
           onChange={updateField}
           disabled={modalType === "view"}
           autoComplete="off"
+          required
         />
       </Grid>
       {loginTypeObj.passwordRequired && (

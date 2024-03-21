@@ -4,7 +4,6 @@ import LockList from "../../components/LockList";
 import LockModal from "../../components/LockModal";
 import FilterModal from "../../components/FilterModal";
 import CategoryModal from "../../components/CategoryModal";
-import { cardsData } from "./data";
 import theme from "../../theme";
 import { deleteLockApi } from "../../api/api";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +26,7 @@ function LockManager() {
     setCurrentPage(value);
   };
 
-  const currentCards = cardsData.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = list?.slice(indexOfFirstCard, indexOfLastCard);
   const mobileSize = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { open } = useSelector((state: RootState) => state.dialog);
@@ -51,7 +50,7 @@ function LockManager() {
   return (
     <Box height="100%">
       <Box py={2}>
-        <LockList locks={list} />
+        <LockList locks={currentCards} />
       </Box>
       <Pagination
         color="primary"

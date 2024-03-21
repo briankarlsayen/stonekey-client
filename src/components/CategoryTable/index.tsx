@@ -1,7 +1,6 @@
 import { Delete, Edit } from "@mui/icons-material";
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -43,8 +42,15 @@ const CategoryTable = ({ categoryList }) => {
   // Function to handle delete action
   const handleDelete = (id) => {
     // Implement your delete logic here
+    const categoryDetails = categoryList.find((e) => e._id === id);
     dispatch(handleDeleteModal({ isOpen: true }));
-    console.log(`Delete item with id: ${id}`);
+    dispatch(
+      handleCategoryModal({
+        isOpen: false,
+        modalType: null,
+        selected: categoryDetails,
+      })
+    );
   };
 
   const handleEdit = (id) => {
@@ -56,10 +62,9 @@ const CategoryTable = ({ categoryList }) => {
         selected: categoryDetails,
       })
     );
-    console.log(`Edit item with id: ${id}`);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -96,7 +101,7 @@ const CategoryTable = ({ categoryList }) => {
                     <Edit />
                   </IconButton>
                   <IconButton
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item._id)}
                     color="secondary"
                   >
                     <Delete />

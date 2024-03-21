@@ -7,9 +7,15 @@ import { handleCategoryModal } from "../../reducers/categoryReducer";
 import DeleteModal from "../../components/DeleteModal";
 import { handleDeleteModal } from "../../reducers/globalReducer";
 import { RootState } from "../../store";
+import { deleteCategoryApi } from "../../api/api";
+import { refreshCategories } from "../../utils/hooks";
 
 function Category() {
   const dispatch = useDispatch();
+  const { list: categoryList, selected } = useSelector(
+    (state: RootState) => state.category
+  );
+
   const handleAddButton = () => {
     dispatch(
       handleCategoryModal({
@@ -19,19 +25,15 @@ function Category() {
     );
   };
 
-  const handleDelete = () => {
-    // delete category api here
-    console.log("run delete category");
+  const handleDelete = async () => {
+    await deleteCategoryApi(selected?._id);
     dispatch(
       handleDeleteModal({
         isOpen: false,
       })
     );
+    await refreshCategories();
   };
-
-  const { list: categoryList } = useSelector(
-    (state: RootState) => state.category
-  );
 
   return (
     <Box py={2}>
